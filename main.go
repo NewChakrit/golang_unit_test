@@ -48,8 +48,9 @@ func main() {
 	//fmt.Println((Factorial(3))) //6
 
 	//app := setUp()
-	Gorm()
+	//Gorm()
 	//app.Listen(":8080")
+	Postgres()
 
 }
 
