@@ -1,6 +1,60 @@
 package main
 
-import "testing"
+import (
+	"bytes"
+	"encoding/json"
+	"github.com/go-playground/assert/v2"
+	"github.com/gofiber/fiber/v2"
+	"net/http/httptest"
+	"testing"
+)
+
+// ================== Test Case Fiber  ==================
+
+func TestUserRoute(t *testing.T) {
+	app := setUp()
+
+	// Define test cases
+	tests := []struct {
+		description  string
+		requestBody  User
+		expectStatus int
+	}{
+		{
+			description:  "Valid input",
+			requestBody:  User{"jane.doe@example.com", "Jane Doe", 30},
+			expectStatus: fiber.StatusOK,
+		},
+		{
+			description:  "Valid input",
+			requestBody:  User{"wrong-email", "Jane Doe", 30},
+			expectStatus: fiber.StatusBadRequest,
+		},
+		{
+			description:  "Valid input",
+			requestBody:  User{"jane.doe@example.com", "1234", 30},
+			expectStatus: fiber.StatusBadRequest,
+		},
+		{
+			description:  "Valid input",
+			requestBody:  User{"jane.doe@example.com", "Jane Doe", -2},
+			expectStatus: fiber.StatusBadRequest,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.description, func(t *testing.T) {
+			reqBody, _ := json.Marshal(tc.requestBody)
+			req := httptest.NewRequest("POST", "/users", bytes.NewReader(reqBody))
+			req.Header.Set("Content-type", "application/json")
+			resp, _ := app.Test(req)
+
+			assert.Equal(t, tc.expectStatus, resp.StatusCode)
+		})
+	}
+}
+
+// ================== Test Add and Test Factorial  ==================
 
 func TestAdd(t *testing.T) {
 	testCases := []struct {
