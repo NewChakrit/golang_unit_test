@@ -47,8 +47,9 @@ func main() {
 	//fmt.Println((Factorial(2))) // 2
 	//fmt.Println((Factorial(3))) //6
 
-	app := setUp()
-	app.Listen(":8080")
+	//app := setUp()
+	Gorm()
+	//app.Listen(":8080")
 
 }
 
